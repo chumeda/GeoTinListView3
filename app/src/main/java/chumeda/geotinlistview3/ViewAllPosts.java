@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -48,11 +47,11 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
                 String id = jo.getString(Config.TAG_ID);
-                String name = jo.getString(Config.TAG_NAME);
+                String title = jo.getString(Config.TAG_TITLE);
 
                 HashMap<String,String> posts = new HashMap<>();
                 posts.put(Config.TAG_ID,id);
-                posts.put(Config.TAG_NAME,name);
+                posts.put(Config.TAG_TITLE, title);
                 list.add(posts);
             }
         } catch (JSONException e) {
@@ -61,7 +60,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
 
         ListAdapter adapter = new SimpleAdapter(
                 ViewAllPosts.this, list, R.layout.list_item,
-                new String[]{Config.TAG_ID,Config.TAG_NAME},
+                new String[]{Config.TAG_ID,Config.TAG_TITLE},
                 new int[]{R.id.id, R.id.name});
 
         listView.setAdapter(adapter);

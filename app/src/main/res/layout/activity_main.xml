@@ -1,67 +1,100 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-android:orientation="vertical"
-android:paddingRight="@dimen/activity_horizontal_margin"
-android:paddingTop="@dimen/activity_vertical_margin"
-android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="1"
+    tools:context=".MainActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="483dp">
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/string_enter_name" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-<EditText
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/editTextName"
-    android:text="jason"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title" />
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/string_choose_username" />
+            <EditText
+                android:id="@+id/editTextName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Event Title" />
 
-<EditText
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/editTextUserName"
-    android:text="hi"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description" />
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/string_choose_password" />
+            <EditText
+                android:id="@+id/editTextUserName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Event Description" />
 
-<EditText
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:inputType="textPassword"
-    android:id="@+id/editTextPassword"
-    android:text="yay"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Date" />
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/string_enter_email" />
+            <DatePicker
+                android:id="@+id/datePickerStartDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
 
-<EditText
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:inputType="textEmailAddress"
-    android:id="@+id/editTextEmail"
-    android:text="jason@gmail.com"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Time" />
 
-<Button
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/button_add"
-    android:id="@+id/buttonAdd" />
+            <TimePicker
+                android:id="@+id/timePickerStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_view"
-        android:id="@+id/buttonView" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Date" />
+
+            <DatePicker
+                android:id="@+id/datePickerEndDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Time" />
+
+            <TimePicker
+                android:id="@+id/timePickerEndTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_add" />
+
+            <Button
+                android:id="@+id/buttonView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_view" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

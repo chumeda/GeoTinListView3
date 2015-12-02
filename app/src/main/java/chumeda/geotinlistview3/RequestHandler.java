@@ -23,12 +23,13 @@ public class RequestHandler {
     public String sendPostRequest(String requestURL,
                                   HashMap<String, String> postDataParams) {
 
+        Log.d("test",requestURL);
+        Log.d("test", postDataParams.toString());
         URL url;
         StringBuilder sb = new StringBuilder();
         String response = "";
         try {
             url = new URL(requestURL);
-
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             Log.d("test", conn.getRequestMethod() + " 1");
             conn.setDoOutput(true);
@@ -49,6 +50,7 @@ public class RequestHandler {
             Log.d("test", "test");
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
+            Log.d("test",os.toString());
             Log.d("test", conn.getRequestMethod() + " 3");
             try {
                 writer.write(getPostDataString(postDataParams));
@@ -129,6 +131,7 @@ public class RequestHandler {
             result.append("=");
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
+        Log.d("test","getPostDataString");
         return result.toString();
     }
 }

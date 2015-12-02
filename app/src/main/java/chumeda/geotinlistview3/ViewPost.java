@@ -2,7 +2,6 @@ package chumeda.geotinlistview3;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -25,10 +26,12 @@ import java.util.HashMap;
 public class ViewPost extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextId;
-    private EditText editTextName;
-    private EditText editTextUsername;
-    private EditText editTextPassword;
-    private EditText editTextEmail;
+    private EditText editTextTitle;
+    private EditText editTextDescription;
+    private DatePicker datePickerStartDate;
+    private DatePicker datePickerEndDate;
+    private TimePicker timePickerStartTime;
+    private TimePicker timePickerEndTime;
 
     private Button buttonUpdate;
     private Button buttonDelete;
@@ -45,10 +48,13 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
         id = intent.getStringExtra(Config.POST_ID);
 
         editTextId = (EditText) findViewById(R.id.editTextId);
-        editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        //initializing views
+        editTextTitle = (EditText) findViewById(R.id.editTextName);
+        editTextDescription = (EditText) findViewById(R.id.editTextUserName);
+        datePickerStartDate = (DatePicker) findViewById(R.id.datePickerStartDate);
+        datePickerEndDate = (DatePicker) findViewById(R.id.datePickerEndDate);
+        timePickerStartTime = (TimePicker) findViewById(R.id.timePickerStartTime);
+        timePickerEndTime = (TimePicker) findViewById(R.id.timePickerEndTime);
 
         buttonUpdate = (Button) findViewById(R.id.buttonUpdate);
         buttonDelete = (Button) findViewById(R.id.buttonDelete);
@@ -94,25 +100,42 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
             JSONObject jsonObject = new JSONObject(json);
             JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
             JSONObject c = result.getJSONObject(0);
-            String name = c.getString(Config.TAG_NAME);
-            String username = c.getString(Config.TAG_USERNAME);
-            String password = c.getString(Config.TAG_PASSWORD);
-            String email = c.getString(Config.TAG_EMAIL);
+            String title = c.getString(Config.TAG_TITLE);
+            String description = c.getString(Config.TAG_DESCRIPTION);
 
-            editTextName.setText(name);
-            editTextUsername.setText(username);
-            editTextPassword.setText(password);
-            editTextEmail.setText(email);
+            editTextTitle.setText(title);
+            editTextDescription.setText(description);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void updatePost() {
-        final String name = editTextName.getText().toString().trim();
-        final String username = editTextUsername.getText().toString().trim();
-        final String password = editTextPassword.getText().toString().trim();
-        final String email = editTextEmail.getText().toString().trim();
+        final String title = editTextTitle.getText().toString().trim();
+        final String description = editTextTitle.getText().toString().trim();
+        //Dates
+        int monthStart = datePickerStartDate.getMonth();
+        int dayStart = datePickerStartDate.getDayOfMonth();
+        int yearStart = datePickerStartDate.getYear();
+        final String dateStart = String.valueOf(yearStart) + "-" + String.valueOf(monthStart) + "-" + String.valueOf(dayStart);
+        int monthEnd = datePickerEndDate.getMonth();
+        int dayEnd = datePickerEndDate.getDayOfMonth();
+        int yearEnd = datePickerEndDate.getYear();
+        final String dateEnd = String.valueOf(yearEnd) + "-" + String.valueOf(monthEnd) + "-" + String.valueOf(dayEnd);
+
+        //Times
+        int timePickerStartTimeHour = timePickerStartTime.getCurrentHour();
+        int timePickerStartTimeMin = timePickerStartTime.getCurrentMinute();
+        int timePickerEndTimeHour = timePickerEndTime.getCurrentHour();
+        int timePickerEndTimeMin = timePickerEndTime.getCurrentMinute();
+        final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
+        final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
+
+        //Location
+        double longitudeNum = 150.000;
+        double latitudeNum = 150.000;
+        final String longitude = String.valueOf(longitudeNum);
+        final String latitude = String.valueOf(latitudeNum);
 
         class UpdatePost extends AsyncTask<Void,Void,String> {
             ProgressDialog loading;
@@ -134,10 +157,14 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
             protected String doInBackground(Void... params) {
                 HashMap<String,String> hashMap = new HashMap<>();
                 hashMap.put(Config.KEY_POST_ID,id);
-                hashMap.put(Config.KEY_POST_NAME,name);
-                hashMap.put(Config.KEY_POST_USERNAME,username);
-                hashMap.put(Config.KEY_POST_PASSWORD,password);
-                hashMap.put(Config.KEY_POST_EMAIL,email);
+                hashMap.put(Config.KEY_POST_TITLE, title);
+                hashMap.put(Config.KEY_POST_DESCRIPTION, description);
+                hashMap.put(Config.KEY_POST_LATITUDE, latitude);
+                hashMap.put(Config.KEY_POST_LONGITUDE, longitude);
+                hashMap.put(Config.KEY_POST_DATE_START, dateStart);
+                hashMap.put(Config.KEY_POST_TIME_START, timeStart);
+                hashMap.put(Config.KEY_POST_DATE_END, dateEnd);
+                hashMap.put(Config.KEY_POST_TIME_END, timeEnd);
 
                 RequestHandler rh = new RequestHandler();
 
