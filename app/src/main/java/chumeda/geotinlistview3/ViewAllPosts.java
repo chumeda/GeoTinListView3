@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -21,9 +22,10 @@ import java.util.HashMap;
 /**
  * Created by chu on 11/29/15.
  */
-public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemClickListener {
+public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemClickListener,View.OnClickListener {
 
     private ListView listView;
+    private Button refreshButton;
 
     private String JSON_STRING;
 
@@ -33,6 +35,8 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
         setContentView(R.layout.activity_view_all_posts);
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
+        refreshButton = (Button) findViewById(R.id.refresh);
+        refreshButton.setOnClickListener(this);
         getJSON();
     }
 
@@ -66,7 +70,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
         listView.setAdapter(adapter);
     }
 
-    private void getJSON() {
+    public void getJSON() {
         class GetJSON extends AsyncTask<Void, Void, String> {
 
             ProgressDialog loading;
@@ -104,5 +108,12 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
         String postId = map.get(Config.TAG_ID).toString();
         intent.putExtra(Config.POST_ID,postId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == refreshButton) {
+            getJSON();
+        }
     }
 }

@@ -1,7 +1,10 @@
 package chumeda.geotinlistview3;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button buttonAdd;
     private Button buttonView;
+    private Button buttonMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonAdd = (Button) findViewById(R.id.buttonAdd);
         buttonView = (Button) findViewById(R.id.buttonView);
+        buttonMap = (Button) findViewById(R.id.buttonMap);
 
         //setting listeners to buttons
         buttonAdd.setOnClickListener(this);
         buttonView.setOnClickListener(this);
+        buttonMap.setOnClickListener(this);
     }
 
     //adding post
@@ -75,6 +81,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
 
         //Location
+       /* //Get Location Manager object from system service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Get the current location
+        Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+        //get latitude of current location
+        double latitudeNum = mylocation.getLatitude();
+        //get longitude of current location
+        double longitudeNum = mylocation.getLongitude();
+        //Post marker only if user is within UH
+        if(latitudeNum > 21.291918 && latitudeNum < 21.310791 && longitudeNum > -157.821747 && longitudeNum < -157.808540) {
+            //set longitude and latitude string
+            final String longitude = String.valueOf(longitudeNum);
+            final String latitude = String.valueOf(latitudeNum);
+        } else {
+            String longitude = null;
+            String latitude = null;
+            new AlertDialog.Builder(this).setTitle("Oh no!").setMessage("You're outside the bounds of UH Manoa :(").setNeutralButton("Okay",null).show();
+        }
+        */
         double longitudeNum = 150.000;
         double latitudeNum = 150.000;
         final String longitude = String.valueOf(longitudeNum);
@@ -137,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ViewAllPosts.class);
             Log.d("test", "intent test");
             startActivity(intent);
+        }
+        if (v == buttonMap) {
+            Intent intentMap = new Intent(this, MapView.class);
+            Log.d("test", "intent map test");
+            startActivity(intentMap);
         }
     }
 }
