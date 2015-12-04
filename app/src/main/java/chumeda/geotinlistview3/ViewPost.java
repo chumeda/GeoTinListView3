@@ -20,8 +20,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-/**
- * Created by chu on 11/29/15.
+/*
+ * Created by chu and ella on 11/29/15.
  */
 public class ViewPost extends AppCompatActivity implements View.OnClickListener {
 

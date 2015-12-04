@@ -144,7 +144,6 @@ public class MapView extends FragmentActivity {
 
         latLng = new LatLng(latitude,longitude);
 
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
     }
