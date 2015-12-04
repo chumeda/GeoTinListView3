@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapView extends FragmentActivity {
 
     private GoogleMap mMap;
+    private LatLng  latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MapView extends FragmentActivity {
         double longitude = mylocation.getLongitude();
         Log.d("test","map");
         //Create latlng object of current location
-        LatLng latLng = new LatLng(latitude,longitude);
+        latLng = new LatLng(latitude,longitude);
 
         //show current location in google maps
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -124,7 +125,6 @@ public class MapView extends FragmentActivity {
         //Get the current location
         Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
 
-        Log.d("test", mylocation.toString());
         //get latitude of current location
         double latitude = mylocation.getLatitude();
 
@@ -132,7 +132,11 @@ public class MapView extends FragmentActivity {
         double longitude = mylocation.getLongitude();
         Log.d("test","map");
         //Create latlng object of current location
+
         LatLng latLng = new LatLng(latitude,longitude);
+
+        latLng = new LatLng(latitude,longitude);
+
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
