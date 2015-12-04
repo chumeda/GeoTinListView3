@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
- * Created by chu on 12/2/15.
+ * Created by chu and ella on 12/2/15.
  */
 public class MapView extends FragmentActivity {
 
@@ -34,6 +34,8 @@ public class MapView extends FragmentActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_map_view);
         setUpMapIfNeeded();
+        onPopulate(21.200000,-157.810000, "test");
+        onPopulate(21.300000,-157.710000, "testDos");
     }
 
     @Override
@@ -81,6 +83,15 @@ public class MapView extends FragmentActivity {
         Intent intent = new Intent(this, MainActivity.class);
 
         startActivity(intent);
+    }
+
+    public void onViewPosts(View view) {
+        Intent intent = new Intent(this, ViewAllPosts.class);
+        startActivity(intent);
+    }
+
+    public void onPopulate(double latitude, double longitude, String location) {
+        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(location));
     }
 
     public void onZoom(View view) {

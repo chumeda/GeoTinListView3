@@ -21,12 +21,15 @@ android:orientation="vertical">
         android:onClick="onPost"
         android:layout_weight="1" />
 
-    <EditText
+    <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/postContent"
-        android:inputType="none"
-        android:layout_weight="4" />
+        android:text="View Posts"
+        android:id="@+id/ViewPosts"
+        android:layout_gravity="left"
+        android:onClick="onViewPosts"
+        android:layout_weight="1" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -38,7 +41,31 @@ android:orientation="vertical">
         android:onClick="dropMarker"
         android:layout_weight="1" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:id="@+id/refresh"
+        android:layout_gravity="right"
+        android:layout_weight="1" />
+
 </LinearLayout>
+
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/postContent"
+        android:inputType="none"
+        android:layout_weight="3" />
+
+</LinearLayout>
+
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="0dp"
