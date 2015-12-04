@@ -44,17 +44,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViewPost"
-            android:label="Post" >
+            android:name=".UpdatePost"
+            android:label="Edit Post" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW_POST" />
+                <action android:name="android.intent.action.UPDATE_POST" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MapView"
             android:label="Map" >
             <intent-filter>
-                <action android:name="android.intent.action."/>
+                <action android:name="android.intent.action.MAP_VIEW"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".ViewPost"
+            android:label="Post" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_POST"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

@@ -1,8 +1,6 @@
 package chumeda.geotinlistview3;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,239 +8,137 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TimePicker;
-import android.widget.Toast;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.ScrollView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
- * Created by chu and ella on 11/29/15.
+/**
+ * Created by chu on 12/3/15.
  */
 public class ViewPost extends AppCompatActivity implements View.OnClickListener {
+    private TextView Ttitle;
+    private TextView Tdescription;
+    private TextView TstartDate;
+    private TextView TstartTime;
+    private TextView TendDate;
+    private TextView TendTime;
+    private TextView Tlocation;
 
-    private EditText editTextId;
-    private EditText editTextTitle;
-    private EditText editTextDescription;
-    private DatePicker datePickerStartDate;
-    private DatePicker datePickerEndDate;
-    private TimePicker timePickerStartTime;
-    private TimePicker timePickerEndTime;
-
-    private Button buttonUpdate;
-    private Button buttonDelete;
+    private Button buttonEdit;
 
     private String id;
+    private String title;
+    private String description;
+    private String latitude;
+    private String longitude;
+    private String dateStart;
+    private String dateEnd;
+    private String timeStart;
+    private String timeEnd;
+
+    private String JSON_STRING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_post);
+        setContentView(R.layout.activity_view_post);
 
         Intent intent = getIntent();
 
         id = intent.getStringExtra(Config.POST_ID);
 
-        editTextId = (EditText) findViewById(R.id.editTextId);
-        //initializing views
-        editTextTitle = (EditText) findViewById(R.id.editTextName);
-        editTextDescription = (EditText) findViewById(R.id.editTextUserName);
-        datePickerStartDate = (DatePicker) findViewById(R.id.datePickerStartDate);
-        datePickerEndDate = (DatePicker) findViewById(R.id.datePickerEndDate);
-        timePickerStartTime = (TimePicker) findViewById(R.id.timePickerStartTime);
-        timePickerEndTime = (TimePicker) findViewById(R.id.timePickerEndTime);
+        Ttitle = (TextView) findViewById(R.id.postTitle);
+        Tdescription = (TextView) findViewById(R.id.postDescription);
+        TstartDate = (TextView) findViewById(R.id.postStartDate);
+        TstartTime = (TextView) findViewById(R.id.postEndDate);
+        TendDate = (TextView) findViewById(R.id.postStartTime);
+        TendTime = (TextView) findViewById(R.id.postEndTime);
+        Tlocation = (TextView) findViewById(R.id.postLocation);
+        buttonEdit = (Button) findViewById(R.id.EditPost);
 
-        buttonUpdate = (Button) findViewById(R.id.buttonUpdate);
-        buttonDelete = (Button) findViewById(R.id.buttonDelete);
+        buttonEdit.setOnClickListener(this);
 
-        buttonUpdate.setOnClickListener(this);
-        buttonDelete.setOnClickListener(this);
-
-        editTextId.setText(id);
-
-        getPost();
+        getJSON();
     }
 
-    private void getPost() {
-        class GetPost extends AsyncTask<Void,Void,String> {
+    public void getJSON() {
+        class GetJSON extends AsyncTask<Void, Void, String> {
+
             ProgressDialog loading;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(ViewPost.this,"Fetching...","Wait...",false,false);
+                loading = ProgressDialog.show(ViewPost.this, "Fetching Data...", "Wait...", false, false);
             }
 
             @Override
-            protected void onPostExecute(String s){
+            protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                showPost(s);
+                JSON_STRING = s;
+                showPost();
             }
 
             @Override
             protected String doInBackground(Void... params) {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put(Config.KEY_POST_ID, id);
                 RequestHandler rh = new RequestHandler();
-                String s = rh.sendGetRequestParam(Config.URL_GET_POST,id);
+                String s = rh.sendPostRequest(Config.URL_GET_POST, hashMap);
                 return s;
             }
         }
-        GetPost gp = new GetPost();
-        gp.execute();
+
+        GetJSON gj = new GetJSON();
+        gj.execute();
     }
 
-    private void showPost(String json) {
-        try{
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
-            JSONObject c = result.getJSONObject(0);
-            String title = c.getString(Config.TAG_TITLE);
-            String description = c.getString(Config.TAG_DESCRIPTION);
+    private void showPost() {
+        JSONObject jsonObject = null;
 
-            editTextTitle.setText(title);
-            editTextDescription.setText(description);
-        } catch (Exception e) {
+        try {
+            jsonObject = new JSONObject(JSON_STRING);
+            Log.d("test", JSON_STRING);
+            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+
+            JSONObject jo = result.getJSONObject(0);
+            id = jo.getString(Config.TAG_ID);
+            title = jo.getString(Config.TAG_TITLE);
+            description = jo.getString(Config.TAG_DESCRIPTION);
+            longitude = jo.getString(Config.TAG_LONGITUDE);
+            latitude = jo.getString(Config.TAG_LATITUDE);
+            dateStart = jo.getString(Config.TAG_DATE_START);
+            dateEnd = jo.getString(Config.TAG_DATE_END);
+            timeStart = jo.getString(Config.TAG_TIME_START);
+            timeEnd = jo.getString(Config.TAG_TIME_END);
+
+            Ttitle.setText("Title: " + title);
+            Tdescription.setText("Description: " + description);
+            TstartDate.setText("Start Date: " + dateStart);
+            TstartTime.setText("Start Time: " + timeStart);
+            TendDate.setText("End Date: " + dateEnd);
+            TendTime.setText("End Time: " + timeEnd);
+            Tlocation.setText("Location (longitude,latitude): (" + latitude + ", " + longitude + ")");
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void updatePost() {
-        final String title = editTextTitle.getText().toString().trim();
-        final String description = editTextTitle.getText().toString().trim();
-        //Dates
-        int monthStart = datePickerStartDate.getMonth();
-        int dayStart = datePickerStartDate.getDayOfMonth();
-        int yearStart = datePickerStartDate.getYear();
-        final String dateStart = String.valueOf(yearStart) + "-" + String.valueOf(monthStart) + "-" + String.valueOf(dayStart);
-        int monthEnd = datePickerEndDate.getMonth();
-        int dayEnd = datePickerEndDate.getDayOfMonth();
-        int yearEnd = datePickerEndDate.getYear();
-        final String dateEnd = String.valueOf(yearEnd) + "-" + String.valueOf(monthEnd) + "-" + String.valueOf(dayEnd);
-
-        //Times
-        int timePickerStartTimeHour = timePickerStartTime.getCurrentHour();
-        int timePickerStartTimeMin = timePickerStartTime.getCurrentMinute();
-        int timePickerEndTimeHour = timePickerEndTime.getCurrentHour();
-        int timePickerEndTimeMin = timePickerEndTime.getCurrentMinute();
-        final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
-        final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
-
-        //Location
-        double longitudeNum = 150.000;
-        double latitudeNum = 150.000;
-        final String longitude = String.valueOf(longitudeNum);
-        final String latitude = String.valueOf(latitudeNum);
-
-        class UpdatePost extends AsyncTask<Void,Void,String> {
-            ProgressDialog loading;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                loading = ProgressDialog.show(ViewPost.this,"Fetching...","Waiting...",false,false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-                Toast.makeText(ViewPost.this,s,Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put(Config.KEY_POST_ID,id);
-                hashMap.put(Config.KEY_POST_TITLE, title);
-                hashMap.put(Config.KEY_POST_DESCRIPTION, description);
-                hashMap.put(Config.KEY_POST_LATITUDE, latitude);
-                hashMap.put(Config.KEY_POST_LONGITUDE, longitude);
-                hashMap.put(Config.KEY_POST_DATE_START, dateStart);
-                hashMap.put(Config.KEY_POST_TIME_START, timeStart);
-                hashMap.put(Config.KEY_POST_DATE_END, dateEnd);
-                hashMap.put(Config.KEY_POST_TIME_END, timeEnd);
-
-                RequestHandler rh = new RequestHandler();
-
-                String s = rh.sendPostRequest(Config.URL_UPDATE_POST,hashMap);
-
-                return s;
-            }
-        }
-
-        UpdatePost up = new UpdatePost();
-        up.execute();
-    }
-
-    private void deletePost() {
-        class DeletePost extends AsyncTask<Void,Void,String> {
-            ProgressDialog loading;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                loading = ProgressDialog.show(ViewPost.this,"Deleting...","Wait...",false,false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-                Toast.makeText(ViewPost.this,s,Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put(Config.KEY_POST_ID,id);
-
-                RequestHandler rh = new RequestHandler();
-                String s = rh.sendPostRequest(Config.URL_DELETE_POST, hashMap);
-                Log.d("test", "s " +s);
-                return s;
-            }
-        }
-
-        DeletePost dp = new DeletePost();
-        dp.execute();
-    }
-
-    private void confirmDeletePost() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Are you sure you want to delete this post?");
-
-        alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        deletePost();
-                        startActivity(new Intent(ViewPost.this, ViewAllPosts.class));
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
     @Override
     public void onClick(View v) {
-        if(v == buttonUpdate) {
-            updatePost();
-        }
-        if(v == buttonDelete) {
-            confirmDeletePost();
+        if (v == buttonEdit) {
+            Intent intent = new Intent(this, UpdatePost.class);
+            startActivity(intent);
         }
     }
 }
