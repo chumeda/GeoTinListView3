@@ -33,6 +33,8 @@ public class MapView extends FragmentActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_map_view);
         setUpMapIfNeeded();
+        onPopulate(21.200000,-157.810000, "test");
+        onPopulate(21.300000,-157.710000, "testDos");
     }
 
     @Override
@@ -51,6 +53,7 @@ public class MapView extends FragmentActivity {
         //Get the current location
         Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
 
+        Log.d("test", mylocation.toString());
         //get latitude of current location
         double latitude = mylocation.getLatitude();
 
@@ -78,8 +81,11 @@ public class MapView extends FragmentActivity {
     public void onPost(View view) {
         Log.d("test", "intent post");
         Intent intent = new Intent(this, MainActivity.class);
-
         startActivity(intent);
+    }
+
+    public void onPopulate(double latitude, double longitude, String location) {
+        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(location));
     }
 
     public void onZoom(View view) {
@@ -111,5 +117,24 @@ public class MapView extends FragmentActivity {
     private void setUpMap() {
         //enable myLocation layer of google map
         mMap.setMyLocationEnabled(true);
+
+        //Get Location Manager object from system service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //Get the current location
+        Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+
+        Log.d("test", mylocation.toString());
+        //get latitude of current location
+        double latitude = mylocation.getLatitude();
+
+        //get longitude of current location
+        double longitude = mylocation.getLongitude();
+        Log.d("test","map");
+        //Create latlng object of current location
+        LatLng latLng = new LatLng(latitude,longitude);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
     }
 }

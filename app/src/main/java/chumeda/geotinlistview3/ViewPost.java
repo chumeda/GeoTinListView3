@@ -41,7 +41,7 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_post);
+        setContentView(R.layout.activity_update_post);
 
         Intent intent = getIntent();
 
