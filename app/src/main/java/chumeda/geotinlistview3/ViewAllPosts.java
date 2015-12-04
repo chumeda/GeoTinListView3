@@ -27,6 +27,8 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
 
     private ListView listView;
     private Button refreshButton;
+    private Button newPost;
+    private Button mapView;
 
     private String JSON_STRING;
 
@@ -37,7 +39,11 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
         refreshButton = (Button) findViewById(R.id.refresh);
+        newPost = (Button) findViewById(R.id.newPostfromList);
+        mapView = (Button) findViewById(R.id.mapViewFromList);
         refreshButton.setOnClickListener(this);
+        newPost.setOnClickListener(this);
+        mapView.setOnClickListener(this);
         getJSON();
     }
 
@@ -118,6 +124,14 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
     public void onClick(View v) {
         if(v == refreshButton) {
             getJSON();
+        }
+        if(v == newPost) {
+            Intent intentPost = new Intent(this, MainActivity.class);
+            startActivity(intentPost);
+        }
+        if(v == mapView) {
+            Intent intentMap = new Intent(this, MapView.class);
+            startActivity(intentMap);
         }
     }
 }

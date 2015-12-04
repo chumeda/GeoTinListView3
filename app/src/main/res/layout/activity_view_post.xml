@@ -14,6 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit" />
+    <Button
+        android:id="@+id/viewAllPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View All Posts" />
+    <Button
+        android:id="@+id/mapViewFromPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Map View" />
 
     <ScrollView
         android:id="@+id/scrollPostView"

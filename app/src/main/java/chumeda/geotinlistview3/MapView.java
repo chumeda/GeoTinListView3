@@ -1,11 +1,13 @@
 package chumeda.geotinlistview3;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -19,6 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 
 /**
  * Created by chu and ella on 12/2/15.
@@ -28,14 +36,15 @@ public class MapView extends FragmentActivity {
     private GoogleMap mMap;
     private LatLng  latLng;
 
+    String JSON_STRING;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_map_view);
         setUpMapIfNeeded();
-        onPopulate(21.200000,-157.810000, "test");
-        onPopulate(21.300000,-157.710000, "testDos");
+        getJSON();
     }
 
     @Override
@@ -91,9 +100,59 @@ public class MapView extends FragmentActivity {
         startActivity(intent);
     }
 
+    public void getJSON() {
+        class GetJSON extends AsyncTask<Void, Void, String> {
 
-    public void onPopulate(double latitude, double longitude, String location) {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(location));
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MapView.this, "Fetching Data...", "Wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                JSON_STRING = s;
+                //showPost();
+                onPopulate();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                RequestHandler rh = new RequestHandler();
+                String s = rh.sendGetRequest(Config.URL_GET_ALL);
+                return s;
+            }
+        }
+
+        GetJSON gj = new GetJSON();
+        gj.execute();
+    }
+
+    public void onPopulate() {
+        Log.d("test","onpopulate");
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(JSON_STRING);
+            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+            for(int i = 0; i<result.length(); i++){
+                JSONObject jo = result.getJSONObject(i);
+                String title = jo.getString(Config.TAG_TITLE);
+                double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                double latitude = jo.getDouble(Config.TAG_LATITUDE);
+
+                putMarker(title, latitude, longitude);
+            }
+        } catch (JSONException e) {
+
+        }
+    }
+
+    public void putMarker(String title, double latitude, double longitude) {
+        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
     }
 
     public void onZoom(View view) {
@@ -117,6 +176,12 @@ public class MapView extends FragmentActivity {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             //check if we were successful in obtaining the map
             if(mMap != null) {
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
+                        marker.showInfoWindow();
+                        return true;
+                    }
+                });
                 setUpMap();
             }
         }

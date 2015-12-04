@@ -33,6 +33,8 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
     private TextView Tlocation;
 
     private Button buttonEdit;
+    private Button buttonViewAllPosts;
+    private Button buttonMapView;
 
     private String id;
     private String title;
@@ -63,8 +65,12 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
         TendTime = (TextView) findViewById(R.id.postEndTime);
         Tlocation = (TextView) findViewById(R.id.postLocation);
         buttonEdit = (Button) findViewById(R.id.EditPost);
+        buttonViewAllPosts = (Button) findViewById(R.id.viewAllPosts);
+        buttonMapView = (Button) findViewById(R.id.mapViewFromPost);
 
         buttonEdit.setOnClickListener(this);
+        buttonViewAllPosts.setOnClickListener(this);
+        buttonMapView.setOnClickListener(this);
 
         getJSON();
     }
@@ -138,7 +144,26 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View v) {
         if (v == buttonEdit) {
             Intent intent = new Intent(this, UpdatePost.class);
+            intent.putExtra(Config.POST_ID,id);
+            intent.putExtra(Config.POST_DESCRIPTION,description);
+            intent.putExtra(Config.POST_DATE_START,dateStart);
+            intent.putExtra(Config.POST_DATE_END,dateEnd);
+            intent.putExtra(Config.POST_TIME_START,timeStart);
+            intent.putExtra(Config.POST_TIME_END,timeEnd);
+            intent.putExtra(Config.POST_LONGITUDE,longitude);
+            intent.putExtra(Config.POST_LATITUDE,latitude);
+            Log.d("test", id);
             startActivity(intent);
+        }
+
+        if (v == buttonViewAllPosts) {
+            Intent intentViewPosts = new Intent(this, ViewAllPosts.class);
+            startActivity(intentViewPosts);
+        }
+
+        if (v == buttonMapView) {
+            Intent intentMapView = new Intent(this, MapView.class);
+            startActivity(intentMapView);
         }
     }
 }

@@ -16,7 +16,7 @@ public class Config {
     public static final String KEY_POST_ID = "id";
     public static final String KEY_POST_TITLE = "title";
     public static final String KEY_POST_DESCRIPTION = "description";
-    public static final String KEY_POST_LATITUDE = "laititude";
+    public static final String KEY_POST_LATITUDE = "latitude";
     public static final String KEY_POST_LONGITUDE = "longitude";
     public static final String KEY_POST_DATE_START = "dateEventStart";
     public static final String KEY_POST_TIME_START = "timeEventStart";

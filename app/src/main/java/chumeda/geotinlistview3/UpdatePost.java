@@ -37,6 +37,14 @@ public class UpdatePost extends AppCompatActivity implements View.OnClickListene
     private Button buttonDelete;
 
     private String id;
+    private String title;
+    private String description;
+    private String longitude;
+    private String latitude;
+    private String dateStart;
+    private String dateEnd;
+    private String timeStart;
+    private String timeEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,14 @@ public class UpdatePost extends AppCompatActivity implements View.OnClickListene
         Intent intent = getIntent();
 
         id = intent.getStringExtra(Config.POST_ID);
+        title = intent.getStringExtra(Config.POST_TITLE);
+        description = intent.getStringExtra(Config.POST_DESCRIPTION);
+        longitude = intent.getStringExtra(Config.POST_LONGITUDE);
+        latitude = intent.getStringExtra(Config.POST_LATITUDE);
+        dateStart = intent.getStringExtra(Config.POST_DATE_START);
+        dateEnd = intent.getStringExtra(Config.POST_DATE_END);
+        timeStart = intent.getStringExtra(Config.POST_TIME_START);
+        timeEnd = intent.getStringExtra(Config.POST_TIME_END);
 
         editTextId = (EditText) findViewById(R.id.editTextId);
         //initializing views
@@ -102,9 +118,19 @@ public class UpdatePost extends AppCompatActivity implements View.OnClickListene
             JSONObject c = result.getJSONObject(0);
             String title = c.getString(Config.TAG_TITLE);
             String description = c.getString(Config.TAG_DESCRIPTION);
+            String dateStart = c.getString(Config.TAG_DATE_START);
+            String dateEnd = c.getString(Config.TAG_DATE_END);
+            String timeStart = c.getString(Config.TAG_TIME_START);
+            String timeEnd = c.getString(Config.TAG_TIME_END);
 
             editTextTitle.setText(title);
             editTextDescription.setText(description);
+            /*datePickerStartDate.setCalendarViewShown(dateStart);
+            editTextDescription.setText(description);
+            editTextDescription.setText(description);
+            editTextDescription.setText(description);
+            editTextDescription.setText(description);
+            editTextDescription.setText(description);*/
         } catch (Exception e) {
             e.printStackTrace();
         }

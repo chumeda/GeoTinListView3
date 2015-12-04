@@ -1,5 +1,6 @@
 package chumeda.geotinlistview3;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
 
         //Location
-       /* //Get Location Manager object from system service LOCATION_SERVICE
+        //Get Location Manager object from system service LOCATION_SERVICE
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //Get the current location
         Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
@@ -99,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String latitude = null;
             new AlertDialog.Builder(this).setTitle("Oh no!").setMessage("You're outside the bounds of UH Manoa :(").setNeutralButton("Okay",null).show();
         }
-        */
-        double longitudeNum = 150.000;
-        double latitudeNum = 150.000;
+
+        //double longitudeNum = 150.000;
+        //double latitudeNum = 150.000;
         final String longitude = String.valueOf(longitudeNum);
         final String latitude = String.valueOf(latitudeNum);
 
