@@ -54,6 +54,7 @@ public class MapView extends FragmentActivity {
         //Get the current location
         Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
 
+        Log.d("test", mylocation.toString());
         //get latitude of current location
         double latitude = mylocation.getLatitude();
 
@@ -81,14 +82,15 @@ public class MapView extends FragmentActivity {
     public void onPost(View view) {
         Log.d("test", "intent post");
         Intent intent = new Intent(this, MainActivity.class);
-
         startActivity(intent);
     }
+
 
     public void onViewPosts(View view) {
         Intent intent = new Intent(this, ViewAllPosts.class);
         startActivity(intent);
     }
+
 
     public void onPopulate(double latitude, double longitude, String location) {
         Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(location));
@@ -137,7 +139,11 @@ public class MapView extends FragmentActivity {
         double longitude = mylocation.getLongitude();
         Log.d("test","map");
         //Create latlng object of current location
+
+        LatLng latLng = new LatLng(latitude,longitude);
+
         latLng = new LatLng(latitude,longitude);
+
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
