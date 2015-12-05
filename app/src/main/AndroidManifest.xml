@@ -29,9 +29,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="Main Activity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN_ACTIVITY" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -52,9 +52,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MapView"
-            android:label="Map" >
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAP_VIEW"/>
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

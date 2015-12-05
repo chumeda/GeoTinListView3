@@ -53,7 +53,7 @@ public class MapView extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    public void dropMarker(View view) {
+/*    public void dropMarker(View view) {
         EditText post = (EditText) findViewById(R.id.postContent);
         String postString = post.getText().toString();
 
@@ -86,7 +86,7 @@ public class MapView extends FragmentActivity {
         } else {
             new AlertDialog.Builder(this).setTitle("Oh no!").setMessage("You're outside the bounds of UH Manoa :(").setNeutralButton("Okay",null).show();
         }
-    }
+    }*/
 
     public void onPost(View view) {
         Log.d("test", "intent post");
