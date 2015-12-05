@@ -149,11 +149,11 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                 JSONObject jo = result.getJSONObject(i);
                 final String title = jo.getString(Config.TAG_TITLE);
                 final String description = jo.getString(Config.TAG_DESCRIPTION);
-                final String dateStart = jo.getString(Config.TAG_DATE_START);
+                final String dateStart = jo.getString(Config.KEY_POST_DATE_START);
                 Log.d("test","get values map");
-                final String dateEnd = jo.getString(Config.TAG_DATE_END);
-                final String timeStart = jo.getString(Config.TAG_TIME_START);
-                final String timeEnd = jo.getString(Config.TAG_TIME_END);
+                final String dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                final String timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                final String timeEnd = jo.getString(Config.KEY_POST_TIME_END);
 
 
                 final double longitude = jo.getDouble(Config.TAG_LONGITUDE);

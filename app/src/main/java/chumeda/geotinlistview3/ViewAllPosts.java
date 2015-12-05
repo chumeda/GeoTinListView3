@@ -1,17 +1,24 @@
 package chumeda.geotinlistview3;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,12 +66,67 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
                 String id = jo.getString(Config.TAG_ID);
-                String title = jo.getString(Config.TAG_TITLE);
+                final String title = jo.getString(Config.TAG_TITLE);
+                final String description = jo.getString(Config.TAG_DESCRIPTION);
+                final String dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                final String dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                final String timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                final String timeEnd = jo.getString(Config.KEY_POST_TIME_END);
 
+                final double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                final double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                final String location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        LayoutInflater layoutInflater = (LayoutInflater) ViewAllPosts.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popupView = layoutInflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.Popup));
+                        final PopupWindow popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+                        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+                        TextView titleText = (TextView) popupView.findViewById(R.id.titlePopup);
+                        TextView descriptionText = (TextView) popupView.findViewById(R.id.descriptionPopup);
+                        TextView dateStartText = (TextView) popupView.findViewById(R.id.dateStartPopup);
+                        TextView timeStartText = (TextView) popupView.findViewById(R.id.timeStartPopup);
+                        TextView dateEndText = (TextView) popupView.findViewById(R.id.dateEndPopup);
+                        TextView timeEndText = (TextView) popupView.findViewById(R.id.timeEndPopup);
+                        TextView locationText = (TextView) popupView.findViewById(R.id.locationPopup);
+
+                        titleText.setText("Title: " + title);
+                        descriptionText.setText("Description: " + description);
+                        dateStartText.setText("Start Date: " + dateStart);
+                        dateEndText.setText("End Date: " + dateEnd);
+                        timeStartText.setText("Start Time: " + timeStart);
+                        timeEndText.setText("End Time: " + timeEnd);
+                        locationText.setText("Location (latitude, longitude): (" + latitude + ", " + longitude + ")");
+
+                        Button editButton = (Button) popupView.findViewById(R.id.editPopup);
+                        Button exitButton = (Button) popupView.findViewById(R.id.exitPopup);
+                        exitButton.setOnClickListener(new Button.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                popupWindow.dismiss();
+                            }
+                        });
+                        editButton.setOnClickListener(new Button.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                popupWindow.dismiss();
+                                Intent intent = new Intent(ViewAllPosts.this, UpdatePost.class);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                });
                 HashMap<String,String> posts = new HashMap<>();
-                posts.put(Config.TAG_ID,id);
+
                 posts.put(Config.TAG_TITLE, title);
+                posts.put(Config.TAG_DESCRIPTION,description);
                 list.add(posts);
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,7 +134,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
 
         ListAdapter adapter = new SimpleAdapter(
                 ViewAllPosts.this, list, R.layout.list_item,
-                new String[]{Config.TAG_ID,Config.TAG_TITLE},
+                new String[]{Config.TAG_TITLE,Config.TAG_DESCRIPTION},
                 new int[]{R.id.id, R.id.name});
 
         listView.setAdapter(adapter);

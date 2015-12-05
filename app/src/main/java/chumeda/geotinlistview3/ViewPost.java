@@ -113,16 +113,19 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
 
         try {
             jsonObject = new JSONObject(JSON_STRING);
-            Log.d("test", JSON_STRING);
+
             JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
 
             JSONObject jo = result.getJSONObject(0);
+
             id = jo.getString(Config.TAG_ID);
             title = jo.getString(Config.TAG_TITLE);
             description = jo.getString(Config.TAG_DESCRIPTION);
             longitude = jo.getString(Config.TAG_LONGITUDE);
             latitude = jo.getString(Config.TAG_LATITUDE);
+
             dateStart = jo.getString(Config.TAG_DATE_START);
+            Log.d("test", "hello");
             dateEnd = jo.getString(Config.TAG_DATE_END);
             timeStart = jo.getString(Config.TAG_TIME_START);
             timeEnd = jo.getString(Config.TAG_TIME_END);
@@ -134,6 +137,7 @@ public class ViewPost extends AppCompatActivity implements View.OnClickListener 
             TendDate.setText("End Date: " + dateEnd);
             TendTime.setText("End Time: " + timeEnd);
             Tlocation.setText("Location (longitude,latitude): (" + latitude + ", " + longitude + ")");
+
 
         } catch (JSONException e) {
             e.printStackTrace();
