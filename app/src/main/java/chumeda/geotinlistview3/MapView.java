@@ -176,12 +176,6 @@ public class MapView extends FragmentActivity {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             //check if we were successful in obtaining the map
             if(mMap != null) {
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
-                        marker.showInfoWindow();
-                        return true;
-                    }
-                });
                 setUpMap();
             }
         }
