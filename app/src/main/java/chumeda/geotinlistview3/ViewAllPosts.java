@@ -126,7 +126,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
             getJSON();
         }
         if(v == newPost) {
-            Intent intentPost = new Intent(this, MainActivity.class);
+            Intent intentPost = new Intent(this, AddPost.class);
             startActivity(intentPost);
         }
         if(v == mapView) {

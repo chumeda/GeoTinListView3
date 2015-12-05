@@ -1,6 +1,6 @@
 package chumeda.geotinlistview3;
 
-import android.app.AlertDialog;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,13 +30,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
 /**
  * Created by chu and ella on 12/2/15.
  */
-public class MapView extends FragmentActivity {
+public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private LatLng  latLng;
@@ -90,7 +96,7 @@ public class MapView extends FragmentActivity {
 
     public void onPost(View view) {
         Log.d("test", "intent post");
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, AddPost.class);
         startActivity(intent);
     }
 
@@ -138,23 +144,82 @@ public class MapView extends FragmentActivity {
         try {
             jsonObject = new JSONObject(JSON_STRING);
             JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
-                String title = jo.getString(Config.TAG_TITLE);
-                String description = jo.getString(Config.TAG_DESCRIPTION);
-                double longitude = jo.getDouble(Config.TAG_LONGITUDE);
-                double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                final String title = jo.getString(Config.TAG_TITLE);
+                final String description = jo.getString(Config.TAG_DESCRIPTION);
+                final String dateStart = jo.getString(Config.TAG_DATE_START);
+                Log.d("test","get values map");
+                final String dateEnd = jo.getString(Config.TAG_DATE_END);
+                final String timeStart = jo.getString(Config.TAG_TIME_START);
+                final String timeEnd = jo.getString(Config.TAG_TIME_END);
+
+
+                final double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                final double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                final String location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
 
                 putMarker(title, description, latitude, longitude);
+
+                PopupWindow popupWindow;
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+
+                        LayoutInflater layoutInflater = (LayoutInflater) MapView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popupView = layoutInflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.Popup));
+                        final PopupWindow popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+                        popupWindow.showAtLocation(popupView, Gravity.CENTER,0, 0);
+
+                        TextView titleText = (TextView) popupView.findViewById(R.id.titlePopup);
+                        TextView descriptionText = (TextView) popupView.findViewById(R.id.descriptionPopup);
+                        TextView dateStartText = (TextView) popupView.findViewById(R.id.dateStartPopup);
+                        TextView timeStartText = (TextView) popupView.findViewById(R.id.timeStartPopup);
+                        TextView dateEndText = (TextView) popupView.findViewById(R.id.dateEndPopup);
+                        TextView timeEndText = (TextView) popupView.findViewById(R.id.timeEndPopup);
+                        TextView locationText = (TextView) popupView.findViewById(R.id.locationPopup);
+
+                        titleText.setText("Title: " + title);
+                        descriptionText.setText("Description: " + description);
+                        dateStartText.setText("Start Date: " + dateStart);
+                        dateEndText.setText("End Date: " + dateEnd);
+                        timeStartText.setText("Start Time: " + timeStart);
+                        timeEndText.setText("End Time: " + timeEnd);
+                        locationText.setText("Location (latitude, longitude): (" + latitude + ", " + longitude + ")");
+
+                        Button editButton = (Button) popupView.findViewById(R.id.editPopup);
+                        Button exitButton = (Button) popupView.findViewById(R.id.exitPopup);
+                        exitButton.setOnClickListener(new Button.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+                                popupWindow.dismiss();
+                            }
+                        });
+                        editButton.setOnClickListener(new Button.OnClickListener(){
+
+                            @Override
+                            public void onClick(View view) {
+                                popupWindow.dismiss();
+                                Intent intent = new Intent(MapView.this,UpdatePost.class);
+                                startActivity(intent);
+                            }
+                        });
+                        Log.d("test", marker.getTitle());
+                    }
+                });
             }
         } catch (JSONException e) {
 
         }
+
     }
 
     public void putMarker(String title, String description, double latitude, double longitude) {
-
         Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title).snippet(description));
+
+
     }
 
     public void onZoom(View view) {
@@ -206,6 +271,10 @@ public class MapView extends FragmentActivity {
         latLng = new LatLng(latitude,longitude);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+    }
+
+    public void onInfoWindowClick(Marker marker){
 
     }
 }

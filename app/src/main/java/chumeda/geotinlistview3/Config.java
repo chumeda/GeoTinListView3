@@ -30,10 +30,10 @@ public class Config {
     public static final String TAG_DESCRIPTION = "description";
     public static final String TAG_LONGITUDE = "longitude";
     public static final String TAG_LATITUDE = "latitude";
-    public static final String TAG_DATE_START = "dateStart";
-    public static final String TAG_DATE_END = "dateEnd";
-    public static final String TAG_TIME_START = "timeStart";
-    public static final String TAG_TIME_END = "timeEnd";
+    public static final String TAG_DATE_START = "dateEventStart";
+    public static final String TAG_DATE_END = "dateEventEnd";
+    public static final String TAG_TIME_START = "timeEventStart";
+    public static final String TAG_TIME_END = "timeEventEnd";
 
     //post id to pass with intent
     public static final String POST_ID = "post_id";

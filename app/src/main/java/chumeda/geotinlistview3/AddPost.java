@@ -14,13 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddPost extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextTitle;
     private EditText editTextDescription;
@@ -116,20 +115,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("test",timeEnd);
 
 
-        class AddPost extends AsyncTask<Void, Void, String> {
+        class AddPostDo extends AsyncTask<Void, Void, String> {
             ProgressDialog loading;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Adding...", "Waiting...", false, false);
+                loading = ProgressDialog.show(chumeda.geotinlistview3.AddPost.this, "Adding...", "Waiting...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                Toast.makeText(chumeda.geotinlistview3.AddPost.this, s, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        AddPost ap = new AddPost();
+        AddPostDo ap = new AddPostDo();
         ap.execute();
     }
 
