@@ -19,6 +19,9 @@ android:orientation="vertical">
         android:id="@+id/Post"
         android:layout_gravity="left"
         android:onClick="onPost"
+        android:textColor="@color/DarkBlue"
+        android:background="@drawable/post_button"
+        android:textSize="@dimen/textSize20"
         android:layout_weight="1" />
 
     <Button
@@ -29,9 +32,12 @@ android:orientation="vertical">
         android:id="@+id/ViewPosts"
         android:layout_gravity="left"
         android:onClick="onViewPosts"
+        android:textColor="@color/Orange"
+        android:background="@drawable/viewposts_button"
+        android:textSize="@dimen/textSize20"
         android:layout_weight="1" />
 
-    <Button
+<!--    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -39,7 +45,7 @@ android:orientation="vertical">
         android:id="@+id/Marker"
         android:layout_gravity="right"
         android:onClick="dropMarker"
-        android:layout_weight="1" />
+        android:layout_weight="1" />-->
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -48,11 +54,14 @@ android:orientation="vertical">
         android:text="Refresh"
         android:id="@+id/refresh"
         android:layout_gravity="right"
+        android:textColor="@color/Purps"
+        android:background="@drawable/refreshmap_button"
+        android:textSize="@dimen/textSize20"
         android:layout_weight="1" />
 
 </LinearLayout>
 
-<LinearLayout
+<!--<LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="fill_parent">
@@ -64,7 +73,7 @@ android:orientation="vertical">
         android:inputType="none"
         android:layout_weight="3" />
 
-</LinearLayout>
+</LinearLayout>-->
 
 <LinearLayout
     android:layout_width="wrap_content"
@@ -97,19 +106,25 @@ android:orientation="vertical">
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="+"
+        android:text="Zoom In (+)"
         android:id="@+id/Bzoomin"
         android:onClick="onZoom"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textColor="@color/Green"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSize27"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="-"
+        android:text="Zoom Out (-)"
         android:id="@+id/Bzoomout"
         android:onClick="onZoom"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textColor="@color/Red"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSize27"/>
 
 </LinearLayout>
 

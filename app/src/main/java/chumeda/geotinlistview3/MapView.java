@@ -53,7 +53,7 @@ public class MapView extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    public void dropMarker(View view) {
+/*    public void dropMarker(View view) {
         EditText post = (EditText) findViewById(R.id.postContent);
         String postString = post.getText().toString();
 
@@ -86,7 +86,7 @@ public class MapView extends FragmentActivity {
         } else {
             new AlertDialog.Builder(this).setTitle("Oh no!").setMessage("You're outside the bounds of UH Manoa :(").setNeutralButton("Okay",null).show();
         }
-    }
+    }*/
 
     public void onPost(View view) {
         Log.d("test", "intent post");
@@ -141,18 +141,20 @@ public class MapView extends FragmentActivity {
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
                 String title = jo.getString(Config.TAG_TITLE);
+                String description = jo.getString(Config.TAG_DESCRIPTION);
                 double longitude = jo.getDouble(Config.TAG_LONGITUDE);
                 double latitude = jo.getDouble(Config.TAG_LATITUDE);
 
-                putMarker(title, latitude, longitude);
+                putMarker(title, description, latitude, longitude);
             }
         } catch (JSONException e) {
 
         }
     }
 
-    public void putMarker(String title, double latitude, double longitude) {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
+    public void putMarker(String title, String description, double latitude, double longitude) {
+
+        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title).snippet(description));
     }
 
     public void onZoom(View view) {
