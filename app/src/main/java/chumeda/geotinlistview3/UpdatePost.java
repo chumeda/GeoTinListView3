@@ -225,7 +225,7 @@ public class UpdatePost extends AppCompatActivity implements View.OnClickListene
             @Override
             protected String doInBackground(Void... params) {
                 HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put(Config.KEY_POST_ID,id);
+                hashMap.put(Config.KEY_POST_ID, id);
 
                 RequestHandler rh = new RequestHandler();
                 String s = rh.sendPostRequest(Config.URL_DELETE_POST, hashMap);

@@ -18,7 +18,6 @@ android:orientation="vertical">
         android:text="Post"
         android:id="@+id/Post"
         android:layout_gravity="left"
-        android:onClick="onPost"
         android:textColor="@color/DarkBlue"
         android:background="@drawable/post_button"
         android:textSize="@dimen/textSize20"

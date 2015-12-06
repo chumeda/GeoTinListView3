@@ -1,6 +1,7 @@
 package chumeda.geotinlistview3;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +16,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,6 +47,7 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
     private GoogleMap mMap;
     private LatLng  latLng;
+    private Button newPostButton;
 
     String JSON_STRING;
 
@@ -51,6 +58,133 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
         setContentView(R.layout.activity_map_view);
         setUpMapIfNeeded();
         getJSON();
+        newPostButton = (Button) findViewById(R.id.Post);
+        newPostButton.setOnClickListener(new AdapterView.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutInflaterAdd = (LayoutInflater) MapView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View popupViewAdd = layoutInflaterAdd.inflate(R.layout.popup_add_post, (ViewGroup) findViewById(R.id.popupAddPost));
+                final PopupWindow popupWindowAdd = new PopupWindow(popupViewAdd, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+                popupWindowAdd.showAtLocation(popupViewAdd, Gravity.CENTER, 0, 0);
+
+                popupWindowAdd.setFocusable(true);
+                popupWindowAdd.update();
+                Button buttonAdd;
+
+                //initializing views
+                final EditText editTextTitle = (EditText) popupViewAdd.findViewById(R.id.editTextTitle);
+                final EditText editTextDescription = (EditText) popupViewAdd.findViewById(R.id.editTextDescription);
+                final DatePicker datePickerStartDate = (DatePicker) popupViewAdd.findViewById(R.id.datePickerStartDate);
+                final DatePicker datePickerEndDate = (DatePicker) popupViewAdd.findViewById(R.id.datePickerEndDate);
+                final TimePicker timePickerStartTime = (TimePicker) popupViewAdd.findViewById(R.id.timePickerStartTime);
+                final TimePicker timePickerEndTime = (TimePicker) popupViewAdd.findViewById(R.id.timePickerEndTime);
+                Log.d("test","hello");
+                buttonAdd = (Button) popupViewAdd.findViewById(R.id.buttonAdd);
+
+                //setting listeners to buttons
+                buttonAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        popupWindowAdd.dismiss();
+                        final String title = editTextTitle.getText().toString().trim();
+                        final String description = editTextDescription.getText().toString().trim();
+
+                        //Dates
+                        int monthStart = datePickerStartDate.getMonth();
+                        int dayStart = datePickerStartDate.getDayOfMonth();
+                        int yearStart = datePickerStartDate.getYear();
+                        final String dateStart = String.valueOf(yearStart) + "-" + String.valueOf(monthStart) + "-" + String.valueOf(dayStart);
+                        int monthEnd = datePickerEndDate.getMonth();
+                        int dayEnd = datePickerEndDate.getDayOfMonth();
+                        int yearEnd = datePickerEndDate.getYear();
+                        final String dateEnd = String.valueOf(yearEnd) + "-" + String.valueOf(monthEnd) + "-" + String.valueOf(dayEnd);
+
+                        //Times
+                        int timePickerStartTimeHour = timePickerStartTime.getCurrentHour();
+                        int timePickerStartTimeMin = timePickerStartTime.getCurrentMinute();
+                        int timePickerEndTimeHour = timePickerEndTime.getCurrentHour();
+                        int timePickerEndTimeMin = timePickerEndTime.getCurrentMinute();
+                        final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
+                        final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
+
+                        //Location
+                        //Get Location Manager object from system service LOCATION_SERVICE
+                        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        //Get the current location
+                        Location mylocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+                        //get latitude of current location
+                        double latitudeNum = mylocation.getLatitude();
+                        //get longitude of current location
+                        double longitudeNum = mylocation.getLongitude();
+                        //Post marker only if user is within UH
+                        if (latitudeNum > 21.291918 && latitudeNum < 21.310791 && longitudeNum > -157.821747 && longitudeNum < -157.808540) {
+                            //set longitude and latitude string
+                            final String longitude = String.valueOf(longitudeNum);
+                            final String latitude = String.valueOf(latitudeNum);
+                        } else {
+                            longitudeNum = 0;
+                            latitudeNum = 0;
+                            new AlertDialog.Builder(MapView.this).setTitle("Oh no!").setMessage("You're outside the bounds of UH Manoa :(").setNeutralButton("Okay", null).show();
+                        }
+
+                        //double longitudeNum = 150.000;
+                        //double latitudeNum = 150.000;
+                        final String longitude = String.valueOf(longitudeNum);
+                        final String latitude = String.valueOf(latitudeNum);
+
+                        Log.d("test", title);
+                        Log.d("test", description);
+                        Log.d("test", longitude);
+                        Log.d("test", latitude);
+                        Log.d("test", dateStart);
+                        Log.d("test", dateEnd);
+                        Log.d("test", timeStart);
+                        Log.d("test", timeEnd);
+
+
+                        class AddPostDo extends AsyncTask<Void, Void, String> {
+                            ProgressDialog loading;
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                loading = ProgressDialog.show(chumeda.geotinlistview3.MapView.this, "Adding...", "Waiting...", false, false);
+                            }
+
+                            @Override
+                            protected void onPostExecute(String s) {
+                                super.onPostExecute(s);
+                                loading.dismiss();
+                                Toast.makeText(chumeda.geotinlistview3.MapView.this, s, Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            protected String doInBackground(Void... v) {
+                                HashMap<String, String> params = new HashMap<>();
+                                params.put(Config.KEY_POST_TITLE, title);
+                                params.put(Config.KEY_POST_DESCRIPTION, description);
+                                params.put(Config.KEY_POST_LATITUDE, latitude);
+                                params.put(Config.KEY_POST_LONGITUDE, longitude);
+                                params.put(Config.KEY_POST_DATE_START, dateStart);
+                                params.put(Config.KEY_POST_TIME_START, timeStart);
+                                params.put(Config.KEY_POST_DATE_END, dateEnd);
+                                params.put(Config.KEY_POST_TIME_END, timeEnd);
+
+                                RequestHandler rh = new RequestHandler();
+                                String res = rh.sendPostRequest(Config.URL_ADD, params);
+                                return res;
+                            }
+                        }
+
+                        if (latitudeNum != 0 && longitudeNum != 0) {
+                            AddPostDo ap = new AddPostDo();
+                            ap.execute();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -147,6 +281,7 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
+                final String id = jo.getString(Config.TAG_ID);
                 final String title = jo.getString(Config.TAG_TITLE);
                 final String description = jo.getString(Config.TAG_DESCRIPTION);
                 final String dateStart = jo.getString(Config.KEY_POST_DATE_START);
@@ -203,6 +338,14 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                             public void onClick(View view) {
                                 popupWindow.dismiss();
                                 Intent intent = new Intent(MapView.this,UpdatePost.class);
+                                intent.putExtra(Config.POST_ID,id);
+                                intent.putExtra(Config.POST_DESCRIPTION,description);
+                                intent.putExtra(Config.POST_DATE_START,dateStart);
+                                intent.putExtra(Config.POST_DATE_END,dateEnd);
+                                intent.putExtra(Config.POST_TIME_START,timeStart);
+                                intent.putExtra(Config.POST_TIME_END,timeEnd);
+                                intent.putExtra(Config.POST_LONGITUDE,longitude);
+                                intent.putExtra(Config.POST_LATITUDE, latitude);
                                 startActivity(intent);
                             }
                         });

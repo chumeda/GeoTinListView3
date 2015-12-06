@@ -36,7 +36,7 @@ public class AddPost extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.popup_add_post);
 
         //initializing views
         editTextTitle = (EditText) findViewById(R.id.editTextName);
