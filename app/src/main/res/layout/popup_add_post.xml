@@ -11,20 +11,24 @@
         android:id="@+id/buttonAdd"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/ic_addpost"
+        android:drawableRight="@mipmap/ic_plus"
         android:text="@string/button_add" />
     <Button
         android:id="@+id/buttonMap"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Map View" />
-
-
+        android:text="Map View"
+    android:drawableLeft="@mipmap/ic_mapphoto"
+    android:drawableRight="@mipmap/ic_marker"/>
 
     <Button
         android:id="@+id/buttonView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_view" />
+        android:text="@string/button_view"
+        android:drawableLeft="@mipmap/ic_viewallposts"
+        android:drawableRight="@mipmap/ic_eye"/>
 
     <ScrollView
         android:id="@+id/scrollView"
