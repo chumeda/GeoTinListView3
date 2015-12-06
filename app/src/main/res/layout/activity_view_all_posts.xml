@@ -19,21 +19,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:text="New Post" />
+            android:text="New Post"
+            android:drawableLeft="@mipmap/ic_plus"/>
 
         <Button
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Refresh" />
+            android:text="Refresh"
+            android:drawableLeft="@mipmap/ic_fresh"/>
 
         <Button
             android:id="@+id/mapViewFromList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="Map View" />
+            android:text="Map View"
+            android:drawableLeft="@mipmap/ic_mapphoto"/>
+
     </LinearLayout>
 
     <ListView
