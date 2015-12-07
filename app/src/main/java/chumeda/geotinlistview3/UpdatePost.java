@@ -63,10 +63,10 @@ public class UpdatePost extends AppCompatActivity implements View.OnClickListene
         timeStart = intent.getStringExtra(Config.POST_TIME_START);
         timeEnd = intent.getStringExtra(Config.POST_TIME_END);
 
-        editTextId = (EditText) findViewById(R.id.editTextId);
         //initializing views
-        editTextTitle = (EditText) findViewById(R.id.editTextName);
-        editTextDescription = (EditText) findViewById(R.id.editTextUserName);
+        editTextId = (EditText) findViewById(R.id.editTextId);
+        editTextTitle = (EditText) findViewById(R.id.editTextTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         datePickerStartDate = (DatePicker) findViewById(R.id.datePickerStartDate);
         datePickerEndDate = (DatePicker) findViewById(R.id.datePickerEndDate);
         timePickerStartTime = (TimePicker) findViewById(R.id.timePickerStartTime);

@@ -39,8 +39,8 @@ public class AddPost extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.popup_add_post);
 
         //initializing views
-        editTextTitle = (EditText) findViewById(R.id.editTextName);
-        editTextDescription = (EditText) findViewById(R.id.editTextUserName);
+        editTextTitle = (EditText) findViewById(R.id.editTextTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         datePickerStartDate = (DatePicker) findViewById(R.id.datePickerStartDate);
         datePickerEndDate = (DatePicker) findViewById(R.id.datePickerEndDate);
         timePickerStartTime = (TimePicker) findViewById(R.id.timePickerStartTime);

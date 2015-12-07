@@ -15,6 +15,12 @@
         android:drawableRight="@mipmap/ic_plus"
         android:text="@string/button_add" />
     <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:drawableLeft="@mipmap/ic_exitarrow"
+        android:id="@+id/exitAdd"/>
+    <Button
         android:id="@+id/buttonMap"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

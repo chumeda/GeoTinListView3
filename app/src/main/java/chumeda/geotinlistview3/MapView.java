@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
@@ -36,18 +37,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
 /**
  * Created by chu and ella on 12/2/15.
  */
-public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener {
+public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener, View.OnClickListener {
 
     private GoogleMap mMap;
     private LatLng  latLng;
     private Button newPostButton;
+    private Button refreshButton;
 
     String JSON_STRING;
 
@@ -58,8 +59,10 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
         setContentView(R.layout.activity_map_view);
         setUpMapIfNeeded();
         getJSON();
+        refreshButton = (Button) findViewById(R.id.refreshMap);
+        refreshButton.setOnClickListener(this);
         newPostButton = (Button) findViewById(R.id.Post);
-        newPostButton.setOnClickListener(new AdapterView.OnClickListener(){
+        newPostButton.setOnClickListener(new AdapterView.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -71,6 +74,7 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                 popupWindowAdd.setFocusable(true);
                 popupWindowAdd.update();
                 Button buttonAdd;
+                Button buttonExitAdd;
 
                 //initializing views
                 final EditText editTextTitle = (EditText) popupViewAdd.findViewById(R.id.editTextTitle);
@@ -79,8 +83,16 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                 final DatePicker datePickerEndDate = (DatePicker) popupViewAdd.findViewById(R.id.datePickerEndDate);
                 final TimePicker timePickerStartTime = (TimePicker) popupViewAdd.findViewById(R.id.timePickerStartTime);
                 final TimePicker timePickerEndTime = (TimePicker) popupViewAdd.findViewById(R.id.timePickerEndTime);
-                Log.d("test","hello");
+                Log.d("test", "hello");
                 buttonAdd = (Button) popupViewAdd.findViewById(R.id.buttonAdd);
+                buttonExitAdd = (Button) popupViewAdd.findViewById(R.id.exitAdd);
+                buttonExitAdd.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        popupWindowAdd.dismiss();
+                    }
+                });
 
                 //setting listeners to buttons
                 buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -337,16 +349,196 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                             @Override
                             public void onClick(View view) {
                                 popupWindow.dismiss();
-                                Intent intent = new Intent(MapView.this,UpdatePost.class);
-                                intent.putExtra(Config.POST_ID,id);
-                                intent.putExtra(Config.POST_DESCRIPTION,description);
-                                intent.putExtra(Config.POST_DATE_START,dateStart);
-                                intent.putExtra(Config.POST_DATE_END,dateEnd);
-                                intent.putExtra(Config.POST_TIME_START,timeStart);
-                                intent.putExtra(Config.POST_TIME_END,timeEnd);
-                                intent.putExtra(Config.POST_LONGITUDE,longitude);
-                                intent.putExtra(Config.POST_LATITUDE, latitude);
-                                startActivity(intent);
+                                LayoutInflater layoutInflaterEdit = (LayoutInflater) MapView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                View popupViewEdit = layoutInflaterEdit.inflate(R.layout.activity_update_post, (ViewGroup) findViewById(R.id.EditPost));
+                                final PopupWindow popupWindowEdit = new PopupWindow(popupViewEdit, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+                                popupWindowEdit.showAtLocation(popupViewEdit, Gravity.CENTER, 0, 0);
+                                popupWindowEdit.setFocusable(true);
+                                popupWindowEdit.update();
+
+                                EditText editTextIdEdit;
+                                final EditText editTextTitleEdit;
+                                final EditText editTextDescriptionEdit;
+                                final DatePicker datePickerStartDateEdit;
+                                final DatePicker datePickerEndDateEdit;
+                                final TimePicker timePickerStartTimeEdit;
+                                final TimePicker timePickerEndTimeEdit;
+
+                                editTextIdEdit = (EditText) popupViewEdit.findViewById(R.id.editTextId);
+                                editTextTitleEdit = (EditText) popupViewEdit.findViewById(R.id.editTextTitle);
+                                editTextDescriptionEdit = (EditText) popupViewEdit.findViewById(R.id.editTextDescription);
+                                datePickerStartDateEdit = (DatePicker) popupViewEdit.findViewById(R.id.datePickerStartDate);
+                                datePickerEndDateEdit = (DatePicker) popupViewEdit.findViewById(R.id.datePickerEndDate);
+                                timePickerStartTimeEdit = (TimePicker) popupViewEdit.findViewById(R.id.timePickerStartTime);
+                                timePickerEndTimeEdit = (TimePicker) popupViewEdit.findViewById(R.id.timePickerEndTime);
+
+                                Button buttonUpdate;
+                                Button buttonDelete;
+                                Button buttonExitEdit;
+
+                                buttonUpdate= (Button) popupViewEdit.findViewById(R.id.buttonUpdate);
+                                buttonDelete = (Button) popupViewEdit.findViewById(R.id.buttonDelete);
+                                buttonExitEdit = (Button) popupViewEdit.findViewById(R.id.exitEdit);
+
+                                editTextIdEdit.setText(id);
+                                editTextTitleEdit.setText(title);
+                                editTextDescriptionEdit.setText(description);
+
+                                Integer yearStart = Integer.valueOf(dateStart.substring(0,4));
+                                Integer monthStart = Integer.valueOf(dateStart.substring(5,7));
+                                Integer dayStart = Integer.valueOf(dateStart.substring(8));
+
+                                Integer yearEnd = Integer.valueOf(dateEnd.substring(0,4));
+                                Integer monthEnd = Integer.valueOf(dateEnd.substring(5,7));
+                                Integer dayEnd = Integer.valueOf(dateEnd.substring(8));
+
+                                datePickerStartDateEdit.updateDate(yearStart, monthStart, dayStart);
+                                datePickerEndDateEdit.updateDate(yearEnd, monthEnd, dayEnd);
+
+                                Integer hourStart = Integer.valueOf(timeStart.substring(0,2));
+                                Integer minStart = Integer.valueOf(timeStart.substring(3,5));
+                                Integer hourEnd = Integer.valueOf(timeEnd.substring(0,2));
+                                Integer minEnd = Integer.valueOf(timeEnd.substring(3,5));
+
+                                timePickerStartTimeEdit.setCurrentHour(hourStart); //setCurrentHour deprecated API level 23 use setHour
+                                timePickerStartTimeEdit.setCurrentMinute(minStart); //setCurrentMinute deprecated API level 23 use setMinute
+
+                                timePickerEndTimeEdit.setCurrentHour(hourEnd);
+                                timePickerEndTimeEdit.setCurrentMinute(minEnd);
+
+                                buttonExitEdit.setOnClickListener(new Button.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        popupWindowEdit.dismiss();
+                                    }
+                                });
+
+                                buttonUpdate.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        final String title = editTextTitleEdit.getText().toString().trim();
+                                        final String description = editTextDescriptionEdit.getText().toString().trim();
+                                        //Dates
+                                        int monthStart = datePickerStartDateEdit.getMonth();
+                                        int dayStart = datePickerStartDateEdit.getDayOfMonth();
+                                        int yearStart = datePickerStartDateEdit.getYear();
+                                        final String dateStart = String.valueOf(yearStart) + "-" + String.valueOf(monthStart) + "-" + String.valueOf(dayStart);
+                                        int monthEnd = datePickerEndDateEdit.getMonth();
+                                        int dayEnd = datePickerEndDateEdit.getDayOfMonth();
+                                        int yearEnd = datePickerEndDateEdit.getYear();
+                                        final String dateEnd = String.valueOf(yearEnd) + "-" + String.valueOf(monthEnd) + "-" + String.valueOf(dayEnd);
+
+                                        //Times
+                                        int timePickerStartTimeHour = timePickerStartTimeEdit.getCurrentHour();
+                                        int timePickerStartTimeMin = timePickerStartTimeEdit.getCurrentMinute();
+                                        int timePickerEndTimeHour = timePickerEndTimeEdit.getCurrentHour();
+                                        int timePickerEndTimeMin = timePickerEndTimeEdit.getCurrentMinute();
+                                        final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
+                                        final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
+
+                                        //Location
+                                        final String longitudeEdit = String.valueOf(longitude);
+                                        final String latitudeEdit = String.valueOf(latitude);
+
+                                        class UpdatePostPressed extends AsyncTask<Void,Void,String> {
+                                            ProgressDialog loading;
+
+                                            @Override
+                                            protected void onPreExecute() {
+                                                super.onPreExecute();
+                                                loading = ProgressDialog.show(chumeda.geotinlistview3.MapView.this,"Fetching...","Waiting...",false,false);
+                                            }
+
+                                            @Override
+                                            protected void onPostExecute(String s) {
+                                                super.onPostExecute(s);
+                                                loading.dismiss();
+                                                Toast.makeText(chumeda.geotinlistview3.MapView.this,s,Toast.LENGTH_LONG).show();
+                                            }
+
+                                            @Override
+                                            protected String doInBackground(Void... params) {
+                                                HashMap<String,String> hashMap = new HashMap<>();
+                                                hashMap.put(Config.KEY_POST_ID,id);
+                                                hashMap.put(Config.KEY_POST_TITLE, title);
+                                                hashMap.put(Config.KEY_POST_DESCRIPTION, description);
+                                                hashMap.put(Config.KEY_POST_LATITUDE, latitudeEdit);
+                                                hashMap.put(Config.KEY_POST_LONGITUDE, longitudeEdit);
+                                                hashMap.put(Config.KEY_POST_DATE_START, dateStart);
+                                                hashMap.put(Config.KEY_POST_TIME_START, timeStart);
+                                                hashMap.put(Config.KEY_POST_DATE_END, dateEnd);
+                                                hashMap.put(Config.KEY_POST_TIME_END, timeEnd);
+
+                                                RequestHandler rh = new RequestHandler();
+
+                                                String s = rh.sendPostRequest(Config.URL_UPDATE_POST,hashMap);
+
+                                                return s;
+                                            }
+                                        }
+
+                                        UpdatePostPressed up = new UpdatePostPressed();
+                                        up.execute();
+                                    }
+                                });
+
+                                buttonDelete.setOnClickListener(new Button.OnClickListener(){
+                                    @Override
+                                    public void onClick(View view) {
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapView.this);
+                                        alertDialogBuilder.setMessage("Are you sure you want to delete this post?");
+
+                                        alertDialogBuilder.setPositiveButton("Yes",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                        class DeletePost extends AsyncTask<Void,Void,String> {
+                                                            ProgressDialog loading;
+
+                                                            @Override
+                                                            protected void onPreExecute() {
+                                                                super.onPreExecute();
+                                                                loading = ProgressDialog.show(MapView.this,"Deleting...","Wait...",false,false);
+                                                            }
+
+                                                            @Override
+                                                            protected void onPostExecute(String s) {
+                                                                super.onPostExecute(s);
+                                                                loading.dismiss();
+                                                                Toast.makeText(MapView.this,s,Toast.LENGTH_LONG).show();
+                                                                //startActivity(new Intent(MapView.this, ViewAllPosts.class));
+                                                            }
+
+                                                            @Override
+                                                            protected String doInBackground(Void... params) {
+                                                                HashMap<String,String> hashMap = new HashMap<>();
+                                                                hashMap.put(Config.KEY_POST_ID, id);
+
+                                                                RequestHandler rh = new RequestHandler();
+                                                                String s = rh.sendPostRequest(Config.URL_DELETE_POST, hashMap);
+                                                                Log.d("test", "s " +s);
+                                                                return s;
+                                                            }
+                                                        }
+
+                                                        DeletePost dp = new DeletePost();
+                                                        dp.execute();
+                                                        popupWindow.dismiss();
+                                                    }
+                                                });
+
+                                        alertDialogBuilder.setNegativeButton("No",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                    }
+                                });
                             }
                         });
                         Log.d("test", marker.getTitle());
@@ -417,6 +609,14 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == refreshButton) {
+            Log.d("test", "refresh");
+            setUpMapIfNeeded();
+            getJSON();
+        }
+    }
     public void onInfoWindowClick(Marker marker){
 
     }
