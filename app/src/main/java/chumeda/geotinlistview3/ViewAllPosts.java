@@ -7,6 +7,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -50,6 +51,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
     private Button mapView;
 
     private String JSON_STRING;
+    private int iJSON;
 
     private HashMap<long[], Integer> postsHashMap = new HashMap<long[], Integer>();
 
@@ -204,7 +206,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
 
     private void showPost() {
         JSONObject jsonObject = null;
-        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+        final ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
         try {
             Log.d("test", JSON_STRING);
@@ -231,8 +233,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                 posts.put(Config.TAG_DESCRIPTION, description);
                 list.add(posts);
 
-
-                Log.d("test", posts.toString());
+                Log.d("test", "outside" + String.valueOf(i));
 
                 //postsHashMap.put(listView.getCheckedItemIds(), i);
 
@@ -253,7 +254,37 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                         TextView timeEndText = (TextView) popupView.findViewById(R.id.timeEndPopup);
                         TextView locationText = (TextView) popupView.findViewById(R.id.locationPopup);
 
-                        Log.d("test", "inside" + String.valueOf(listView.getCheckedItemIds()));
+                        Log.d("test", "inside" + String.valueOf(i));
+
+                        String title = null;
+                        String description = null;
+                        String dateStart = null;
+                        String dateEnd = null;
+                        String timeStart = null;
+                        String timeEnd = null;
+                        String location = null;
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(JSON_STRING);
+                            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                            JSONObject jo = result.getJSONObject(i);
+                            iJSON = i;
+                            Log.d("test", String.valueOf(iJSON));
+                            String id = jo.getString(Config.TAG_ID);
+                            title = jo.getString(Config.TAG_TITLE);
+                            description = jo.getString(Config.TAG_DESCRIPTION);
+                            dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                            Log.d("test", "get values map");
+                            dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                            timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                            timeEnd = jo.getString(Config.KEY_POST_TIME_END);
+
+                            double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                            double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                            location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
+                        } catch (JSONException e) {
+                        }
+
 
                         titleText.setText("Title: " + title);
                         descriptionText.setText("Description: " + description);
@@ -261,7 +292,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                         dateEndText.setText("End Date: " + dateEnd);
                         timeStartText.setText("Start Time: " + timeStart);
                         timeEndText.setText("End Time: " + timeEnd);
-                        locationText.setText("Location (latitude, longitude): (" + latitude + ", " + longitude + ")");
+                        locationText.setText(location);
 
                         Button editButton = (Button) popupView.findViewById(R.id.editPopup);
                         Button exitButton = (Button) popupView.findViewById(R.id.exitPopup);
@@ -306,6 +337,33 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                                 buttonUpdate = (Button) popupViewEdit.findViewById(R.id.buttonUpdate);
                                 buttonDelete = (Button) popupViewEdit.findViewById(R.id.buttonDelete);
                                 buttonExitEdit = (Button) popupViewEdit.findViewById(R.id.exitEdit);
+
+                                String title = null;
+                                String description = null;
+                                String dateStart = null;
+                                String dateEnd = null;
+                                String timeStart = null;
+                                String timeEnd = null;
+                                String location = null;
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                    JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                    JSONObject jo = result.getJSONObject(iJSON);
+                                    String id = jo.getString(Config.TAG_ID);
+                                    title = jo.getString(Config.TAG_TITLE);
+                                    description = jo.getString(Config.TAG_DESCRIPTION);
+                                    dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                                    Log.d("test", "get values map");
+                                    dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                                    timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                                    timeEnd = jo.getString(Config.KEY_POST_TIME_END);
+
+                                    double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                                    double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                                    location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
+                                } catch (JSONException e) {
+                                }
 
                                 editTextIdEdit.setText(id);
                                 editTextTitleEdit.setText(title);
@@ -363,6 +421,19 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                                         final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
                                         final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
 
+                                        double longitude = 0;
+                                        double latitude = 0;
+                                        String idget = null;
+                                        //String id = null;
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                            JSONObject jo = result.getJSONObject(iJSON);
+                                            idget = jo.getString(Config.TAG_ID);
+                                            longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                                            latitude = jo.getDouble(Config.TAG_LATITUDE);
+                                        } catch(JSONException e) {}
+                                        final String id = idget;
                                         //Location
                                         final String longitudeEdit = String.valueOf(longitude);
                                         final String latitudeEdit = String.valueOf(latitude);
@@ -409,6 +480,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                                     }
                                 });
 
+
                                 buttonDelete.setOnClickListener(new Button.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -438,6 +510,15 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
 
                                                             @Override
                                                             protected String doInBackground(Void... params) {
+                                                                String id = null;
+                                                                try {
+                                                                    JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                                                    JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                                                    JSONObject jo = result.getJSONObject(iJSON);
+                                                                    id = jo.getString(Config.TAG_ID);
+
+                                                                } catch(JSONException e) {}
+
                                                                 HashMap<String, String> hashMap = new HashMap<>();
                                                                 hashMap.put(Config.KEY_POST_ID, id);
 
