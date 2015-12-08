@@ -47,7 +47,7 @@ public class AddPost extends AppCompatActivity implements View.OnClickListener {
         timePickerEndTime = (TimePicker) findViewById(R.id.timePickerEndTime);
 
         buttonAdd = (Button) findViewById(R.id.buttonAdd);
-        buttonView = (Button) findViewById(R.id.buttonView);
+        //buttonView = (Button) findViewById(R.id.buttonView);
         buttonMap = (Button) findViewById(R.id.buttonMap);
 
         //setting listeners to buttons

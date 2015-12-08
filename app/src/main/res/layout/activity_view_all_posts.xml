@@ -30,13 +30,13 @@
             android:text="Refresh"
             android:drawableLeft="@mipmap/ic_fresh"/>
 
-        <Button
+        <!--<Button
             android:id="@+id/mapViewFromList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="Map View"
-            android:drawableLeft="@mipmap/ic_mapphoto"/>
+            android:drawableLeft="@mipmap/ic_mapphoto"/>-->
 
     </LinearLayout>
 
