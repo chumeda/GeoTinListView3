@@ -61,7 +61,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
         listView.setOnItemClickListener(this);
         refreshButton = (Button) findViewById(R.id.refresh);
         newPost = (Button) findViewById(R.id.newPostfromList);
-        mapView = (Button) findViewById(R.id.mapViewFromList);
+        //mapView = (Button) findViewById(R.id.mapViewFromList);
         refreshButton.setOnClickListener(this);
         newPost.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
@@ -198,7 +198,7 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                 });
             }
         });
-        mapView.setOnClickListener(this);
+        //mapView.setOnClickListener(this);
         getJSON();
     }
 

@@ -18,12 +18,8 @@ android:orientation="vertical">
         android:text="Post"
         android:id="@+id/Post"
         android:layout_gravity="left"
-
-        android:textColor="@color/DarkBlue"
-        android:textSize="@dimen/textSize20"
-
         android:onClick="onPost"
-        android:drawableLeft="@mipmap/ic_posthome"
+        android:drawableLeft="@mipmap/ic_addpost"
         android:layout_weight="1" />
 
     <Button
