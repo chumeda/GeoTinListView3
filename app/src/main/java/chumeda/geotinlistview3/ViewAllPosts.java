@@ -3,6 +3,7 @@ package chumeda.geotinlistview3;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -48,6 +50,8 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
     private Button mapView;
 
     private String JSON_STRING;
+
+    private HashMap<long[], Integer> postsHashMap = new HashMap<long[], Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +225,18 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                 final double latitude = jo.getDouble(Config.TAG_LATITUDE);
                 final String location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
 
+                HashMap<String, String> posts = new HashMap<>();
+
+                posts.put(Config.TAG_TITLE, title);
+                posts.put(Config.TAG_DESCRIPTION, description);
+                list.add(posts);
+
+
+                Log.d("test", posts.toString());
+
+                //postsHashMap.put(listView.getCheckedItemIds(), i);
+
+                //Log.d("test", String.valueOf(listView.getCheckedItemPositions()));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -236,6 +252,8 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                         TextView dateEndText = (TextView) popupView.findViewById(R.id.dateEndPopup);
                         TextView timeEndText = (TextView) popupView.findViewById(R.id.timeEndPopup);
                         TextView locationText = (TextView) popupView.findViewById(R.id.locationPopup);
+
+                        Log.d("test", "inside" + String.valueOf(listView.getCheckedItemIds()));
 
                         titleText.setText("Title: " + title);
                         descriptionText.setText("Description: " + description);
@@ -464,11 +482,11 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                         });
                     }
                 });
-                HashMap<String, String> posts = new HashMap<>();
+                /*HashMap<String, String> posts = new HashMap<>();
 
                 posts.put(Config.TAG_TITLE, title);
                 posts.put(Config.TAG_DESCRIPTION, description);
-                list.add(posts);
+                list.add(posts);*/
 
 
             }
@@ -480,7 +498,6 @@ public class ViewAllPosts extends AppCompatActivity implements ListView.OnItemCl
                 ViewAllPosts.this, list, R.layout.list_item,
                 new String[]{Config.TAG_TITLE, Config.TAG_DESCRIPTION},
                 new int[]{R.id.id, R.id.name});
-
         listView.setAdapter(adapter);
     }
 

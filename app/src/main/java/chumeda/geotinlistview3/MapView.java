@@ -50,6 +50,8 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
     private Button newPostButton;
     private Button refreshButton;
 
+    private HashMap<Marker, Integer> markerHashMap = new HashMap<Marker, Integer>();
+
     String JSON_STRING;
 
     @Override
@@ -86,7 +88,7 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                 Log.d("test", "hello");
                 buttonAdd = (Button) popupViewAdd.findViewById(R.id.buttonAdd);
                 buttonExitAdd = (Button) popupViewAdd.findViewById(R.id.exitAdd);
-                buttonExitAdd.setOnClickListener(new View.OnClickListener(){
+                buttonExitAdd.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
@@ -293,27 +295,27 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
-                final String id = jo.getString(Config.TAG_ID);
-                final String title = jo.getString(Config.TAG_TITLE);
-                final String description = jo.getString(Config.TAG_DESCRIPTION);
-                final String dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                String id = jo.getString(Config.TAG_ID);
+                String title = jo.getString(Config.TAG_TITLE);
+                String description = jo.getString(Config.TAG_DESCRIPTION);
+                String dateStart = jo.getString(Config.KEY_POST_DATE_START);
                 Log.d("test","get values map");
-                final String dateEnd = jo.getString(Config.KEY_POST_DATE_END);
-                final String timeStart = jo.getString(Config.KEY_POST_TIME_START);
-                final String timeEnd = jo.getString(Config.KEY_POST_TIME_END);
+                String dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                String timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                String timeEnd = jo.getString(Config.KEY_POST_TIME_END);
 
 
-                final double longitude = jo.getDouble(Config.TAG_LONGITUDE);
-                final double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                double latitude = jo.getDouble(Config.TAG_LATITUDE);
                 final String location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
 
-                putMarker(title, description, latitude, longitude);
+                putMarker(title, description, latitude, longitude, i);
 
                 PopupWindow popupWindow;
 
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
-                    public void onInfoWindowClick(Marker marker) {
+                    public void onInfoWindowClick(final Marker marker) {
 
                         LayoutInflater layoutInflater = (LayoutInflater) MapView.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View popupView = layoutInflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.Popup));
@@ -328,13 +330,41 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                         TextView timeEndText = (TextView) popupView.findViewById(R.id.timeEndPopup);
                         TextView locationText = (TextView) popupView.findViewById(R.id.locationPopup);
 
+                        String title = null;
+                        String description = null;
+                        String dateStart = null;
+                        String dateEnd = null;
+                        String timeStart = null;
+                        String timeEnd = null;
+                        String location = null;
+
+                        Integer i = markerHashMap.get(marker);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(JSON_STRING);
+                            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                            JSONObject jo = result.getJSONObject(i);
+                            String id = jo.getString(Config.TAG_ID);
+                            title = jo.getString(Config.TAG_TITLE);
+                            description = jo.getString(Config.TAG_DESCRIPTION);
+                            dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                            Log.d("test", "get values map");
+                            dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                            timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                            timeEnd = jo.getString(Config.KEY_POST_TIME_END);
+
+                            double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                            double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                            location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
+                        } catch(JSONException e) {}
+
                         titleText.setText("Title: " + title);
                         descriptionText.setText("Description: " + description);
                         dateStartText.setText("Start Date: " + dateStart);
                         dateEndText.setText("End Date: " + dateEnd);
                         timeStartText.setText("Start Time: " + timeStart);
                         timeEndText.setText("End Time: " + timeEnd);
-                        locationText.setText("Location (latitude, longitude): (" + latitude + ", " + longitude + ")");
+                        locationText.setText("Location (latitude, longitude): " + location);
 
                         Button editButton = (Button) popupView.findViewById(R.id.editPopup);
                         Button exitButton = (Button) popupView.findViewById(R.id.exitPopup);
@@ -363,6 +393,35 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                                 final DatePicker datePickerEndDateEdit;
                                 final TimePicker timePickerStartTimeEdit;
                                 final TimePicker timePickerEndTimeEdit;
+
+                                Integer i = markerHashMap.get(marker);
+
+                                String id = null;
+                                String title = null;
+                                String description = null;
+                                String dateStart = null;
+                                String dateEnd = null;
+                                String timeStart = null;
+                                String timeEnd = null;
+                                String location = null;
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                    JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                    JSONObject jo = result.getJSONObject(i);
+                                    id = jo.getString(Config.TAG_ID);
+                                    title = jo.getString(Config.TAG_TITLE);
+                                    description = jo.getString(Config.TAG_DESCRIPTION);
+                                    dateStart = jo.getString(Config.KEY_POST_DATE_START);
+                                    Log.d("test", "get values map");
+                                    dateEnd = jo.getString(Config.KEY_POST_DATE_END);
+                                    timeStart = jo.getString(Config.KEY_POST_TIME_START);
+                                    timeEnd = jo.getString(Config.KEY_POST_TIME_END);
+
+                                    double longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                                    double latitude = jo.getDouble(Config.TAG_LATITUDE);
+                                    location = "Location (latitude, longitude): (" + latitude + ", " + longitude + ")";
+                                } catch(JSONException e) {}
 
                                 editTextIdEdit = (EditText) popupViewEdit.findViewById(R.id.editTextId);
                                 editTextTitleEdit = (EditText) popupViewEdit.findViewById(R.id.editTextTitle);
@@ -436,6 +495,20 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
                                         final String timeStart = String.valueOf(timePickerStartTimeHour) + ":" + String.valueOf(timePickerStartTimeMin);
                                         final String timeEnd = String.valueOf(timePickerEndTimeHour) + ":" + String.valueOf(timePickerEndTimeMin);
 
+                                        Integer i = markerHashMap.get(marker);
+                                        double longitude = 0;
+                                        double latitude = 0;
+                                        String idget = null;
+                                        //String id = null;
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                            JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                            JSONObject jo = result.getJSONObject(i);
+                                            idget = jo.getString(Config.TAG_ID);
+                                            longitude = jo.getDouble(Config.TAG_LONGITUDE);
+                                            latitude = jo.getDouble(Config.TAG_LATITUDE);
+                                        } catch(JSONException e) {}
+                                        final String id = idget;
                                         //Location
                                         final String longitudeEdit = String.valueOf(longitude);
                                         final String latitudeEdit = String.valueOf(latitude);
@@ -511,6 +584,16 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
                                                             @Override
                                                             protected String doInBackground(Void... params) {
+                                                                Integer i = markerHashMap.get(marker);
+                                                                String id = null;
+                                                                try {
+                                                                    JSONObject jsonObject = new JSONObject(JSON_STRING);
+                                                                    JSONArray result = jsonObject.getJSONArray(Config.TAG_JSON_ARRAY);
+                                                                    JSONObject jo = result.getJSONObject(i);
+                                                                    id = jo.getString(Config.TAG_ID);
+
+                                                                } catch(JSONException e) {}
+
                                                                 HashMap<String,String> hashMap = new HashMap<>();
                                                                 hashMap.put(Config.KEY_POST_ID, id);
 
@@ -551,9 +634,10 @@ public class MapView extends FragmentActivity implements GoogleMap.OnInfoWindowC
 
     }
 
-    public void putMarker(String title, String description, double latitude, double longitude) {
+    public void putMarker(String title, String description, double latitude, double longitude, Integer i) {
         Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title).snippet(description));
-
+        Log.d("test", "marker put" + i.toString());
+        markerHashMap.put(marker,i);
 
     }
 
